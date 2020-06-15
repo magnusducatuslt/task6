@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Table, Delete, Form, Submit, Input } from "../common";
+import { Table, Delete, Form } from "../common";
 import Faker from "faker";
 
 export const PlanetsPage = ({ initialState, setNewState }) => {
@@ -36,7 +36,9 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
   }));
   return (
     <div>
-      PlanetPage
+      <div>
+        <h1>Planet's Page</h1>
+      </div>
       {planets.length > 0 ? (
         <Table
           body={planets}
@@ -57,6 +59,7 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
           <h1>no records</h1>
         </div>
       )}
+      <br />
       <Form
         submit={(e) => {
           e.preventDefault();
@@ -74,75 +77,69 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
             },
           ]);
         }}
-      >
-        <Input
-          label={"name"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setName(e.target.value);
-          }}
-          type={"text"}
-          value={name}
-          name={"name"}
-        />
-        <Input
-          label={"climate"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setClimate(e.target.value);
-          }}
-          type={"text"}
-          value={climate}
-          name={"climate"}
-        />
-        <Input
-          label={"terrain"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setTerrain(e.target.value);
-          }}
-          type={"text"}
-          value={terrain}
-          name={"terrain"}
-        />
-        <Input
-          label={"diametr"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setDiametr(e.target.value);
-          }}
-          type={"text"}
-          value={diametr}
-          name={"diametr"}
-        />
-        <Input
-          label={"population"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setPopulation(e.target.value);
-          }}
-          type={"number"}
-          value={population}
-          name={"population"}
-        />
-        <Input
-          label={"created"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setCreated(e.target.value);
-          }}
-          type={"text"}
-          value={created}
-          name={"created"}
-        />
-        <Submit text={"Submit"} />
-      </Form>
+        inputs={[
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setName(e.target.value);
+            },
+            type: "text",
+            value: name,
+            name: "name",
+          },
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setClimate(e.target.value);
+            },
+            type: "text",
+            value: climate,
+            name: "climate",
+          },
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setTerrain(e.target.value);
+            },
+            type: "text",
+            value: terrain,
+            name: "terrain",
+          },
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setDiametr(e.target.value);
+            },
+            type: "text",
+            value: diametr,
+            name: "diametr",
+          },
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setPopulation(e.target.value);
+            },
+            type: "number",
+            value: population,
+            name: "population",
+          },
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setCreated(e.target.value);
+            },
+            type: "text",
+            value: created,
+            name: "created",
+          },
+        ]}
+      ></Form>
     </div>
   );
 };

@@ -29,7 +29,9 @@ export const PeoplePage = ({ initialState, setNewState }) => {
   }));
   return (
     <div>
-      PeoplePage
+      <div>
+        <h1>People's Page</h1>
+      </div>
       {body.length > 0 ? (
         <Table
           body={body}
@@ -40,6 +42,7 @@ export const PeoplePage = ({ initialState, setNewState }) => {
           <h1>no records</h1>
         </div>
       )}
+      <br />
       <Form
         submit={(e) => {
           e.preventDefault();
@@ -49,48 +52,33 @@ export const PeoplePage = ({ initialState, setNewState }) => {
             { id: Faker.random.uuid(), first, last, handle },
           ]);
         }}
-      >
-        <label>
-          First:
-          <input
-            type="text"
-            name="first"
-            value={first}
-            onChange={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+        inputs={[
+          {
+            type: "text",
+            name: "first",
+            value: first,
+            onChange: (e) => {
               setFirst(e.target.value);
-            }}
-          />
-        </label>
-        <label>
-          Last:
-          <input
-            type="text"
-            name="last"
-            value={last}
-            onChange={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+            },
+          },
+          {
+            type: "text",
+            name: "last",
+            value: last,
+            onChange: (e) => {
               setLast(e.target.value);
-            }}
-          />
-        </label>
-        <label>
-          Handle:
-          <input
-            type="text"
-            name="handle"
-            value={handle}
-            onChange={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
+            },
+          },
+          {
+            type: "text",
+            name: "handle",
+            value: handle,
+            onChange: (e) => {
               setHandle(e.target.value);
-            }}
-          />
-        </label>
-        <Submit text={"Submit"} />
-      </Form>
+            },
+          },
+        ]}
+      ></Form>
     </div>
   );
 };

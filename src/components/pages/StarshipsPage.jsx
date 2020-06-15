@@ -29,7 +29,9 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
   }));
   return (
     <div>
-      PlanetPage
+      <div>
+        <h1>Starship's Page</h1>
+      </div>
       {ships.length > 0 ? (
         <Table
           body={ships}
@@ -40,6 +42,7 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
           <h1>no records</h1>
         </div>
       )}
+      <br />
       <Form
         submit={(e) => {
           e.preventDefault();
@@ -54,42 +57,39 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
             },
           ]);
         }}
-      >
-        <Input
-          label={"name"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setName(e.target.value);
-          }}
-          type={"text"}
-          value={name}
-          name={"name"}
-        />
-        <Input
-          label={"speed"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setSpeed(e.target.value);
-          }}
-          type={"number"}
-          value={speed}
-          name={"speed"}
-        />
-        <Input
-          label={"owner"}
-          action={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setOwner(e.target.value);
-          }}
-          type={"text"}
-          value={owner}
-          name={"owner"}
-        />
-        <Submit text={"Submit"} />
-      </Form>
+        inputs={[
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setName(e.target.value);
+            },
+            type: "text",
+            value: name,
+            name: "name",
+          },
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setSpeed(e.target.value);
+            },
+            type: "number",
+            value: speed,
+            name: "speed",
+          },
+          {
+            onChange: (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              setOwner(e.target.value);
+            },
+            type: "text",
+            value: owner,
+            name: "owner",
+          },
+        ]}
+      ></Form>
     </div>
   );
 };
