@@ -6,8 +6,10 @@
   "author": "Your Name <you@example.com>",
   "license": "MIT",
   "scripts": {
-    "build:dev": "rm -rf dist && webpack --config webpack.config.js",
-    "start": "webpack-dev-server --config webpack.config.js"
+    "build:dev": "rm -rf dist && webpack --env=develop --config webpack.config.js",
+    "start:dev": "webpack-dev-server --env=dev --config webpack.config.js",
+    "build:prod": "rm -rf dist && webpack --env=production --config webpack.config.js",
+    "start:prod": "webpack-dev-server --env=production --config webpack.config.js"
   },
   "dependencies": {
     "@babel/core": "^7.10.2",
