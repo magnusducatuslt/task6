@@ -9,13 +9,26 @@ import {
 
 export const StarshipsPage = ({ initialState, setNewState }) => {
   const history = useHistory();
-  const heads = ["Ships", "name", "speed", "owner", "id", "action"];
+  const heads = [
+    "Ships",
+    "name",
+    "model",
+    "manufacturer",
+    "cost_in_credits",
+    "length",
+    "crew",
+    "starship_class",
+    "action",
+  ];
   const ships = initialState.map((ship, index) => ({
     count: index + 1,
     name: ship.name,
-    speed: ship.speed,
-    owner: ship.owner,
-    id: ship.id,
+    model: ship.model,
+    manufacturer: ship.manufacturer,
+    cost_in_credits: ship.cost_in_credits,
+    length: ship.length,
+    crew: ship.crew,
+    starship_class: ship.starship_class,
     action: (
       <ButtonDelete
         action={(e) => {
@@ -29,6 +42,7 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
   }));
   function deleteLine(index) {
     initialState.splice(index, 1);
+    localStorage.setItem("starships", JSON.stringify([...initialState]));
     setNewState([...initialState]);
   }
   function handleClickOnTable({ value }) {
@@ -38,9 +52,9 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
         value,
         inputs: returnMeNewArrayWithOutParams({
           arr: heads,
-          excluders: ["id", "action", "Ships"],
+          excluders: ["action", "Ships", "name", "count"],
         }),
-        targetState: "ships",
+        targetState: "starships",
         intention: "update",
       },
     });
@@ -57,9 +71,9 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
         }),
         inputs: returnMeNewArrayWithOutParams({
           arr: heads,
-          excluders: ["id", "action", "Ships"],
+          excluders: ["action", "Ships"],
         }),
-        targetState: "ships",
+        targetState: "starships",
         intention: "create",
       },
     });

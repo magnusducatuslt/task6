@@ -13,10 +13,12 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
     name: planet.name,
     climate: planet.climate,
     terrain: planet.terrain,
-    diametr: planet.diametr,
+    rotation_period: planet.rotation_period,
+    orbital_period: planet.orbital_period,
+    gravity: planet.gravity,
+    surface_water: planet.surface_water,
     population: planet.population,
     created: planet.created,
-    id: planet.id,
     action: (
       <ButtonDelete
         action={(e) => {
@@ -33,14 +35,17 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
     "name",
     "climate",
     "terrain",
-    "diametr",
+    "rotation_period",
+    "orbital_period",
+    "gravity",
+    "surface_water",
     "population",
     "created",
-    "id",
     "action",
   ];
   function deleteLine(index) {
     initialState.splice(index, 1);
+    localStorage.setItem("planets", JSON.stringify([...initialState]));
     setNewState([...initialState]);
   }
   function handleClickOnTable({ value }) {
@@ -50,7 +55,7 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
         value,
         inputs: returnMeNewArrayWithOutParams({
           arr: heads,
-          excluders: ["id", "action", "Planets"],
+          excluders: ["action", "Planets", "count", "name"],
         }),
         targetState: "planets",
         intention: "update",
@@ -69,7 +74,7 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
         }),
         inputs: returnMeNewArrayWithOutParams({
           arr: heads,
-          excluders: ["id", "action", "Planets"],
+          excluders: ["action", "Planets"],
         }),
         targetState: "planets",
         intention: "create",
@@ -86,7 +91,7 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
           body={planets}
           heads={heads}
           clickOnTable={handleClickOnTable}
-          excluders={["action", "Planets"]}
+          excluders={["action", "count", "Planets"]}
         />
       ) : (
         <div>

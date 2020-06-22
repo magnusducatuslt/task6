@@ -1,7 +1,6 @@
 import React from "react";
 import { Table, ButtonDelete, ButtonCreate } from "../common";
 import { useHistory } from "react-router-dom";
-
 import {
   returnMeNewArrayWithOutParams,
   returnMeCreatedObjectFromArrayWithoutParams,
@@ -9,13 +8,26 @@ import {
 
 export const PeoplePage = ({ initialState, setNewState }) => {
   const history = useHistory();
-  const heads = ["count", "id", "first", "last", "handle", "action"];
+  const heads = [
+    "count",
+    "name",
+    "mass",
+    "hair_color",
+    "skin_color",
+    "eye_color",
+    "birth_year",
+    "gender",
+    "action",
+  ];
   const body = initialState.map((people, index) => ({
     count: index + 1,
-    id: people.id,
-    first: people.first,
-    last: people.last,
-    handle: people.handle,
+    name: people.name,
+    mass: people.mass,
+    hair_color: people.hair_color,
+    skin_color: people.skin_color,
+    gender: people.gender,
+    birth_year: people.birth_year,
+    eye_color: people.eye_color,
     action: (
       <ButtonDelete
         text={"Delete"}
@@ -29,6 +41,7 @@ export const PeoplePage = ({ initialState, setNewState }) => {
   }));
   function deleteLine(index) {
     initialState.splice(index, 1);
+    localStorage.setItem("planets", JSON.stringify([...initialState]));
     setNewState([...initialState]);
   }
   function handleClickOnTable({ value }) {
@@ -38,9 +51,9 @@ export const PeoplePage = ({ initialState, setNewState }) => {
         value,
         inputs: returnMeNewArrayWithOutParams({
           arr: heads,
-          excluders: ["id", "action", "count"],
+          excluders: ["action", "count", "name"],
         }),
-        targetState: "peoples",
+        targetState: "people",
         intention: "update",
       },
     });
@@ -57,9 +70,9 @@ export const PeoplePage = ({ initialState, setNewState }) => {
         }),
         inputs: returnMeNewArrayWithOutParams({
           arr: heads,
-          excluders: ["id", "action", "count"],
+          excluders: ["action", "count"],
         }),
-        targetState: "peoples",
+        targetState: "people",
         intention: "create",
       },
     });

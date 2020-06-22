@@ -8,48 +8,36 @@ import {
 import { NavBar } from "./components/common";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { returnMeUnForbiddenLinks } from "@utills";
-import Faker from "faker";
-
+import { swapiApi, localStorageApi } from "@services";
 import "./App.scss";
+import { useEffect } from "react";
 
 function App() {
+  const pages = ["people", "starships", "planets"];
   const [states, setState] = useState({
-    peoples: [
-      {
-        id: Faker.random.uuid(),
-        first: Faker.internet.userName(),
-        last: Faker.internet.userName(),
-        handle: Faker.internet.email(),
-      },
-      {
-        id: Faker.random.uuid(),
-        first: Faker.internet.userName(),
-        last: Faker.internet.userName(),
-        handle: Faker.internet.email(),
-      },
-      {
-        id: Faker.random.uuid(),
-        first: Faker.internet.userName(),
-        last: Faker.internet.userName(),
-        handle: Faker.internet.email(),
-      },
-    ],
-    planets: [
-      {
-        id: Faker.random.uuid(),
-        name: Faker.company.companyName(),
-        climate: Faker.internet.color(),
-        terrain: Faker.internet.domainSuffix(),
-        diametr: Faker.finance.mask(),
-        population: Faker.finance.amount(),
-        created: `${Faker.date.future()}`,
-      },
-    ],
-    ships: [],
+    people: [],
+    planets: [],
+    starships: [],
   });
+  useEffect(() => {
+    async function fillStorage() {
+      const { status, message } = localStorageApi({ arr: pages });
+      if (status) {
+        setState({ ...message });
+      } else {
+        for (const page of pages) {
+          message[page] = message[page] ? message[page] : await swapiApi(page);
+          localStorage.setItem(page, JSON.stringify(message[page]));
+        }
+        setState({ ...message });
+      }
+    }
+    fillStorage();
+  }, []);
+
   function update({ container, value }) {
     return container.map((state) => {
-      if (state.id === value.id) {
+      if (state.name === value.name) {
         return value;
       }
       return state;
@@ -63,9 +51,9 @@ function App() {
       exact: false,
       component: (
         <PeoplePage
-          initialState={states["peoples"]}
+          initialState={states["people"]}
           setNewState={(state) => {
-            setState({ ...states, peoples: [].concat(state) });
+            setState({ ...states, people: [].concat(state) });
           }}
         />
       ),
@@ -85,15 +73,15 @@ function App() {
       ),
     },
     {
-      name: "starship",
+      name: "starships",
       path: "/starship",
       text: "Starship's",
       exact: false,
       component: () => (
         <StarshipsPage
-          initialState={states["ships"]}
+          initialState={states["starships"]}
           setNewState={(state) => {
-            setState({ ...states, ships: [].concat(state) });
+            setState({ ...states, starshipsships: [].concat(state) });
           }}
         />
       ),
@@ -111,16 +99,23 @@ function App() {
                 container: states[targetState],
                 value: values,
               });
+              localStorage.setItem(
+                targetState,
+                JSON.stringify(updatedContainer)
+              );
               setState({
                 ...states,
                 [targetState]: [].concat(updatedContainer),
               });
             } else {
+              localStorage.setItem(
+                targetState,
+                JSON.stringify(states[targetState].concat({ ...values }))
+              );
               setState({
                 ...states,
                 [targetState]: states[targetState].concat({
                   ...values,
-                  id: Faker.random.uuid(),
                 }),
               });
             }

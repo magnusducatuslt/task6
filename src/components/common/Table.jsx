@@ -25,7 +25,7 @@ export const Table = ({ body, heads, clickOnTable, excluders }) => {
                 style={{ color: "white !important" }}
                 key={`${Date.now()}/${index}`}
               >
-                {head}
+                {head.name}
               </TableCell>
             ))}
           </TableRow>
