@@ -1,5 +1,12 @@
 import {
   returnMeUnForbiddenLinks,
   returnMeNewObjectWithOutParams,
+  returnMeNewArrayWithOutParams,
+  returnMeCreatedObjectFromArrayWithoutParams,
 } from "./sortings";
-export { returnMeUnForbiddenLinks, returnMeNewObjectWithOutParams };
+export {
+  returnMeNewArrayWithOutParams,
+  returnMeUnForbiddenLinks,
+  returnMeNewObjectWithOutParams,
+  returnMeCreatedObjectFromArrayWithoutParams,
+};

@@ -1,28 +1,23 @@
-import React, { useState } from "react";
-import { Table, Delete, Form, Submit } from "../common";
+import React from "react";
+import { Table, ButtonDelete, ButtonCreate } from "../common";
 import { useHistory } from "react-router-dom";
-import Faker from "faker";
+
+import {
+  returnMeNewArrayWithOutParams,
+  returnMeCreatedObjectFromArrayWithoutParams,
+} from "@utills";
 
 export const PeoplePage = ({ initialState, setNewState }) => {
   const history = useHistory();
-  const [first, setFirst] = useState("");
-  const [last, setLast] = useState("");
-  const [handle, setHandle] = useState("");
-  function deleteLine(index) {
-    initialState.splice(index, 1);
-    setNewState([...initialState]);
-  }
-  function handleClickOnTable(value) {
-    history.push({ pathname: "/form", state: { value } });
-  }
+  const heads = ["count", "id", "first", "last", "handle", "action"];
   const body = initialState.map((people, index) => ({
-    index: index + 1,
+    count: index + 1,
     id: people.id,
     first: people.first,
     last: people.last,
     handle: people.handle,
     action: (
-      <Delete
+      <ButtonDelete
         text={"Delete"}
         action={(e) => {
           e.preventDefault();
@@ -32,6 +27,43 @@ export const PeoplePage = ({ initialState, setNewState }) => {
       />
     ),
   }));
+  function deleteLine(index) {
+    initialState.splice(index, 1);
+    setNewState([...initialState]);
+  }
+  function handleClickOnTable({ value }) {
+    history.push({
+      pathname: "/form",
+      state: {
+        value,
+        inputs: returnMeNewArrayWithOutParams({
+          arr: heads,
+          excluders: ["id", "action", "count"],
+        }),
+        targetState: "peoples",
+        intention: "update",
+      },
+    });
+  }
+  function handleCreateRecord(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    history.push({
+      pathname: "/form",
+      state: {
+        value: returnMeCreatedObjectFromArrayWithoutParams({
+          arr: heads,
+          excluders: ["action", "count"],
+        }),
+        inputs: returnMeNewArrayWithOutParams({
+          arr: heads,
+          excluders: ["id", "action", "count"],
+        }),
+        targetState: "peoples",
+        intention: "create",
+      },
+    });
+  }
   return (
     <div>
       <div>
@@ -40,8 +72,9 @@ export const PeoplePage = ({ initialState, setNewState }) => {
       {body.length > 0 ? (
         <Table
           body={body}
-          heads={["count", "id", "first", "last", "handle", "action"]}
+          heads={heads}
           clickOnTable={handleClickOnTable}
+          excluders={["action", "count"]}
         />
       ) : (
         <div>
@@ -49,42 +82,7 @@ export const PeoplePage = ({ initialState, setNewState }) => {
         </div>
       )}
       <br />
-      <Form
-        submit={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          setNewState([
-            ...initialState,
-            { id: Faker.random.uuid(), first, last, handle },
-          ]);
-        }}
-        inputs={[
-          {
-            type: "text",
-            name: "first",
-            value: first,
-            onChange: (e) => {
-              setFirst(e.target.value);
-            },
-          },
-          {
-            type: "text",
-            name: "last",
-            value: last,
-            onChange: (e) => {
-              setLast(e.target.value);
-            },
-          },
-          {
-            type: "text",
-            name: "handle",
-            value: handle,
-            onChange: (e) => {
-              setHandle(e.target.value);
-            },
-          },
-        ]}
-      ></Form>
+      <ButtonCreate onClick={handleCreateRecord} text={`Create Person`} />
     </div>
   );
 };

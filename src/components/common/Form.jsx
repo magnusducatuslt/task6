@@ -1,7 +1,7 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import { Submit } from "./Submit";
-export const Form = ({ children, inputs, submit }) => {
+import { ButtonSubmit } from "./ButtonSubmit";
+export const Form = ({ inputs, text, submit }) => {
   return (
     <form onSubmit={submit}>
       {inputs.map((input, index) => (
@@ -15,7 +15,7 @@ export const Form = ({ children, inputs, submit }) => {
           onChange={input.onChange}
         />
       ))}
-      <Submit text={"Submit"} />
+      <ButtonSubmit text={text} />
     </form>
   );
 };

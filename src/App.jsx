@@ -14,7 +14,7 @@ import "./App.scss";
 
 function App() {
   const [states, setState] = useState({
-    people: [
+    peoples: [
       {
         id: Faker.random.uuid(),
         first: Faker.internet.userName(),
@@ -34,7 +34,7 @@ function App() {
         handle: Faker.internet.email(),
       },
     ],
-    planet: [
+    planets: [
       {
         id: Faker.random.uuid(),
         name: Faker.company.companyName(),
@@ -45,7 +45,7 @@ function App() {
         created: `${Faker.date.future()}`,
       },
     ],
-    ship: [],
+    ships: [],
   });
   function update({ container, value }) {
     return container.map((state) => {
@@ -63,9 +63,9 @@ function App() {
       exact: false,
       component: (
         <PeoplePage
-          initialState={states["people"]}
+          initialState={states["peoples"]}
           setNewState={(state) => {
-            setState({ ...states, people: [].concat(state) });
+            setState({ ...states, peoples: [].concat(state) });
           }}
         />
       ),
@@ -77,9 +77,9 @@ function App() {
       exact: false,
       component: () => (
         <PlanetsPage
-          initialState={states["planet"]}
+          initialState={states["planets"]}
           setNewState={(state) => {
-            setState({ ...states, planet: [].concat(state) });
+            setState({ ...states, planets: [].concat(state) });
           }}
         />
       ),
@@ -91,9 +91,9 @@ function App() {
       exact: false,
       component: () => (
         <StarshipsPage
-          initialState={states["ship"]}
+          initialState={states["ships"]}
           setNewState={(state) => {
-            setState({ ...states, ship: [].concat(state) });
+            setState({ ...states, ships: [].concat(state) });
           }}
         />
       ),
@@ -105,15 +105,24 @@ function App() {
       exact: false,
       component: () => (
         <FormPage
-          setNewState={({ intention, key, value }) => {
+          setNewState={({ intention, targetState, values }) => {
             if (intention === "update") {
               const updatedContainer = update({
-                container: states[key],
-                value,
+                container: states[targetState],
+                value: values,
               });
-              setState({ ...states, [key]: [].concat(updatedContainer) });
+              setState({
+                ...states,
+                [targetState]: [].concat(updatedContainer),
+              });
             } else {
-              setState({ ...states, [key]: [].concat(value) });
+              setState({
+                ...states,
+                [targetState]: states[targetState].concat({
+                  ...values,
+                  id: Faker.random.uuid(),
+                }),
+              });
             }
           }}
         />

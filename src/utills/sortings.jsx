@@ -9,9 +9,28 @@ export const returnMeUnForbiddenLinks = ({ container, forbidden }) => {
 };
 export const returnMeNewObjectWithOutParams = ({ obj, excluders }) => {
   return Object.keys(obj).reduce((template, property) => {
-    if (property === "action") {
-      template[property] = obj.property;
+    if (!excluders.find((excluder) => (excluder === property ? true : false))) {
+      template[property] = obj[property];
     }
     return template;
-  });
+  }, {});
+};
+export const returnMeNewArrayWithOutParams = ({ arr, excluders }) => {
+  return arr.reduce((container, property) => {
+    if (!excluders.find((excluder) => (excluder === property ? true : false))) {
+      container.push(property);
+    }
+    return container;
+  }, []);
+};
+export const returnMeCreatedObjectFromArrayWithoutParams = ({
+  arr,
+  excluders,
+}) => {
+  return arr.reduce((container, property) => {
+    if (!excluders.find((excluder) => (excluder === property ? true : false))) {
+      container[property] = "";
+    }
+    return container;
+  }, {});
 };
