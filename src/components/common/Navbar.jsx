@@ -12,7 +12,7 @@ export const NavBar = ({ links }) => (
           key={`${Date.now()}/${index}`}
           style={{ flexGrow: 1 }}
         >
-          <Link to={link.to} style={{ textDecorationLine: "none" }}>
+          <Link to={link.path} style={{ textDecorationLine: "none" }}>
             {link.text}
           </Link>
         </Typography>

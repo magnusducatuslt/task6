@@ -6,7 +6,8 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-export const Table = ({ body, heads }) => {
+import { returnMeNewObjectWithOutParams } from "@utills";
+export const Table = ({ body, heads, clickOnTable }) => {
   return (
     <TableContainer component={Paper}>
       <TableEntity aria-label=" table">
@@ -30,7 +31,19 @@ export const Table = ({ body, heads }) => {
         </TableHead>
         <TableBody>
           {body.map((elem, index) => (
-            <TableRow key={`${Date.now()}/${index}`}>
+            <TableRow
+              key={`${Date.now()}/${index}`}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                clickOnTable(
+                  returnMeNewObjectWithOutParams(
+                    elem,
+                    new Map([["action", ""]])
+                  )
+                );
+              }}
+            >
               {Object.keys(elem).map((elemIndex, subIndex) => (
                 <TableCell key={`${Date.now()}/${subIndex}`}>
                   {elem[elemIndex]}

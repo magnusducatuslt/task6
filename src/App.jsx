@@ -1,7 +1,13 @@
 import React, { useState } from "react";
-import { PeoplePage, PlanetsPage, StarshipsPage } from "./components/pages";
+import {
+  PeoplePage,
+  PlanetsPage,
+  StarshipsPage,
+  FormPage,
+} from "./components/pages";
 import { NavBar } from "./components/common";
 import { Switch, Route, Redirect } from "react-router-dom";
+import { returnMeUnForbiddenLinks } from "@utills";
 import Faker from "faker";
 
 import "./App.scss";
@@ -41,51 +47,105 @@ function App() {
     ],
     ship: [],
   });
+  function update({ container, value }) {
+    return container.map((state) => {
+      if (state.id === value.id) {
+        return value;
+      }
+      return state;
+    });
+  }
+  const routes = [
+    {
+      name: "people",
+      path: "/people",
+      text: "People's",
+      exact: false,
+      component: (
+        <PeoplePage
+          initialState={states["people"]}
+          setNewState={(state) => {
+            setState({ ...states, people: [].concat(state) });
+          }}
+        />
+      ),
+    },
+    {
+      name: "planets",
+      path: "/planets",
+      text: "Planet's",
+      exact: false,
+      component: () => (
+        <PlanetsPage
+          initialState={states["planet"]}
+          setNewState={(state) => {
+            setState({ ...states, planet: [].concat(state) });
+          }}
+        />
+      ),
+    },
+    {
+      name: "starship",
+      path: "/starship",
+      text: "Starship's",
+      exact: false,
+      component: () => (
+        <StarshipsPage
+          initialState={states["ship"]}
+          setNewState={(state) => {
+            setState({ ...states, ship: [].concat(state) });
+          }}
+        />
+      ),
+    },
+    {
+      name: "form",
+      path: "/form",
+      text: "add/update record",
+      exact: false,
+      component: () => (
+        <FormPage
+          setNewState={({ intention, key, value }) => {
+            if (intention === "update") {
+              const updatedContainer = update({
+                container: states[key],
+                value,
+              });
+              setState({ ...states, [key]: [].concat(updatedContainer) });
+            } else {
+              setState({ ...states, [key]: [].concat(value) });
+            }
+          }}
+        />
+      ),
+    },
+    {
+      name: "not-found",
+      path: "/not-found",
+      exact: true,
+      component: () => (
+        <div>
+          <h1>not fount 404</h1>
+        </div>
+      ),
+    },
+  ];
+  const navabarForbiddenLinks = ["form", "not-found"];
+  const navbarValidLinks = returnMeUnForbiddenLinks({
+    container: [].concat(routes),
+    forbidden: [].concat(navabarForbiddenLinks),
+  });
   return (
     <div className="App">
-      <NavBar
-        links={[
-          { to: "/people", text: "People's" },
-          { to: "/planets", text: "Planet's" },
-          { to: "/starship", text: "Starship's" },
-        ]}
-      />
+      <NavBar links={navbarValidLinks} />
       <div>
         <Switch>
           <Redirect exact from="/" to="/people" />
-          <Route path="/people">
-            <PeoplePage
-              initialState={states["people"]}
-              setNewState={(state) => {
-                setState({ ...states, people: state });
-              }}
-            />
-          </Route>
-          <Route path="/planets">
-            <PlanetsPage
-              initialState={states["planet"]}
-              setNewState={(state) => {
-                setState({ ...states, planet: state });
-              }}
-            />
-          </Route>
-          <Route path="/starship">
-            <StarshipsPage
-              initialState={states["ship"]}
-              setNewState={(state) => {
-                setState({ ...states, ship: state });
-              }}
-            />
-          </Route>
-          <Route
-            path="/not-found"
-            exact={true}
-            component={() => (
-              <div>
-                <h1>not fount 404</h1>
-              </div>
-            )}
-          />
+          {routes.map(({ path, exact, component }, index) => (
+            <Route key={`${Date.now()}/${index}`} path={path} exact={exact}>
+              {component}
+            </Route>
+          ))}
           <Redirect from="*" to="/not-found" />
         </Switch>
       </div>

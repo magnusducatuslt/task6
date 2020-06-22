@@ -1,14 +1,19 @@
 import React, { useState } from "react";
 import { Table, Delete, Form, Submit } from "../common";
+import { useHistory } from "react-router-dom";
 import Faker from "faker";
 
 export const PeoplePage = ({ initialState, setNewState }) => {
+  const history = useHistory();
   const [first, setFirst] = useState("");
   const [last, setLast] = useState("");
   const [handle, setHandle] = useState("");
   function deleteLine(index) {
     initialState.splice(index, 1);
     setNewState([...initialState]);
+  }
+  function handleClickOnTable(value) {
+    history.push({ pathname: "/form", state: { value } });
   }
   const body = initialState.map((people, index) => ({
     index: index + 1,
@@ -36,6 +41,7 @@ export const PeoplePage = ({ initialState, setNewState }) => {
         <Table
           body={body}
           heads={["count", "id", "first", "last", "handle", "action"]}
+          clickOnTable={handleClickOnTable}
         />
       ) : (
         <div>
