@@ -8,11 +8,9 @@ import { Form } from "../common";
 import { useHistory } from "react-router-dom";
 const FormPage = ({ createOneRecord, updateOneRecord }) => {
   const history = useHistory();
-  console.log("history======", history.location.state);
   const { value, inputs, targetState, intention } = history.location.state;
   const [values, setValue] = useState(value);
   const [errorsTitle, setErrorTitile] = useState("");
-  console.log("new value======", values);
   let schema = {};
   for (const val in value) {
     schema[val] = Joi.string().min(1).max(20).required();

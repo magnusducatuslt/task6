@@ -12,7 +12,6 @@ import theme from "./theme";
 import "./index.css";
 const state = window.__STATE__;
 delete window.__STATE__;
-console.log(state);
 const store = configureStore(state);
 ReactDOM.render(
   <React.StrictMode>
