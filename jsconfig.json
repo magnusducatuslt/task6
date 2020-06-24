@@ -3,7 +3,8 @@
     "baseUrl": "src",
     "paths": {
       "@utills": ["./utills"],
-      "@services": ["./services"]
+      "@services": ["./services"],
+      "@store": ["./store"]
     }
   }
 }

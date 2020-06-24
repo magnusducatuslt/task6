@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
+import { connect } from "react-redux";
+import { setRecord, deleteOneRecord } from "@store";
 import { Table, ButtonDelete, ButtonCreate } from "../common";
 import { useHistory } from "react-router-dom";
 import {
@@ -6,19 +8,19 @@ import {
   returnMeCreatedObjectFromArrayWithoutParams,
 } from "@utills";
 
-export const PlanetsPage = ({ initialState, setNewState }) => {
+const PlanetsPage = ({ planet, deleteOneRecord }) => {
   const history = useHistory();
-  const planets = initialState.map((planet, index) => ({
+  const planets = planet.map((elem, index) => ({
     count: index + 1,
-    name: planet.name,
-    climate: planet.climate,
-    terrain: planet.terrain,
-    rotation_period: planet.rotation_period,
-    orbital_period: planet.orbital_period,
-    gravity: planet.gravity,
-    surface_water: planet.surface_water,
-    population: planet.population,
-    created: planet.created,
+    name: elem.name,
+    climate: elem.climate,
+    terrain: elem.terrain,
+    rotation_period: elem.rotation_period,
+    orbital_period: elem.orbital_period,
+    gravity: elem.gravity,
+    surface_water: elem.surface_water,
+    population: elem.population,
+    created: elem.created,
     action: (
       <ButtonDelete
         action={(e) => {
@@ -44,9 +46,10 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
     "action",
   ];
   function deleteLine(index) {
-    initialState.splice(index, 1);
-    localStorage.setItem("planets", JSON.stringify([...initialState]));
-    setNewState([...initialState]);
+    deleteOneRecord({
+      target: "planets",
+      index,
+    });
   }
   function handleClickOnTable({ value }) {
     history.push({
@@ -104,3 +107,9 @@ export const PlanetsPage = ({ initialState, setNewState }) => {
     </div>
   );
 };
+
+const mapStateToProps = ({ recordsReducer: { planets } }) => {
+  return { planet: planets };
+};
+const mapDispatchToProps = { setRecord, deleteOneRecord };
+export default connect(mapStateToProps, mapDispatchToProps)(PlanetsPage);

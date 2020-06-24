@@ -1,4 +1,6 @@
 import React from "react";
+import { connect } from "react-redux";
+import { setRecord, deleteOneRecord } from "@store";
 import { Table, ButtonDelete, ButtonCreate } from "../common";
 import { useHistory } from "react-router-dom";
 import {
@@ -6,7 +8,7 @@ import {
   returnMeCreatedObjectFromArrayWithoutParams,
 } from "@utills";
 
-export const PeoplePage = ({ initialState, setNewState }) => {
+const PeoplePage = ({ people, deleteOneRecord }) => {
   const history = useHistory();
   const heads = [
     "count",
@@ -19,15 +21,15 @@ export const PeoplePage = ({ initialState, setNewState }) => {
     "gender",
     "action",
   ];
-  const body = initialState.map((people, index) => ({
+  const body = people.map((elem, index) => ({
     count: index + 1,
-    name: people.name,
-    mass: people.mass,
-    hair_color: people.hair_color,
-    skin_color: people.skin_color,
-    gender: people.gender,
-    birth_year: people.birth_year,
-    eye_color: people.eye_color,
+    name: elem.name,
+    mass: elem.mass,
+    hair_color: elem.hair_color,
+    skin_color: elem.skin_color,
+    gender: elem.gender,
+    birth_year: elem.birth_year,
+    eye_color: elem.eye_color,
     action: (
       <ButtonDelete
         text={"Delete"}
@@ -40,9 +42,10 @@ export const PeoplePage = ({ initialState, setNewState }) => {
     ),
   }));
   function deleteLine(index) {
-    initialState.splice(index, 1);
-    localStorage.setItem("planets", JSON.stringify([...initialState]));
-    setNewState([...initialState]);
+    deleteOneRecord({
+      target: "people",
+      index,
+    });
   }
   function handleClickOnTable({ value }) {
     history.push({
@@ -99,3 +102,9 @@ export const PeoplePage = ({ initialState, setNewState }) => {
     </div>
   );
 };
+
+const mapStateToProps = ({ recordsReducer: { people } }) => {
+  return { people };
+};
+const mapDispatchToProps = { setRecord, deleteOneRecord };
+export default connect(mapStateToProps, mapDispatchToProps)(PeoplePage);

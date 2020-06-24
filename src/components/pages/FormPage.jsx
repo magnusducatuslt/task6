@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import Joi from "@hapi/joi";
+import { connect } from "react-redux";
+import { createOneRecord, updateOneRecord } from "@store";
+
 import { Form } from "../common";
 import { useHistory } from "react-router-dom";
-export const FormPage = ({ setNewState }) => {
+const FormPage = ({ createOneRecord, updateOneRecord }) => {
   const history = useHistory();
   console.log("history======", history.location.state);
   const { value, inputs, targetState, intention } = history.location.state;
@@ -42,8 +45,14 @@ export const FormPage = ({ setNewState }) => {
           try {
             e.preventDefault();
             e.stopPropagation();
-            const result = await schema.validateAsync(values);
-            setNewState({ targetState, intention, values });
+            await schema.validateAsync(values);
+            if (intention === "update") {
+              updateOneRecord({ target: targetState, body: values });
+            } else {
+              createOneRecord({ target: targetState, body: values });
+            }
+
+            //setNewState({ targetState, intention, values });
             history.goBack();
           } catch (e) {
             setErrorTitile(e);
@@ -65,3 +74,11 @@ export const FormPage = ({ setNewState }) => {
     </div>
   );
 };
+
+const mapStateToProps = ({
+  recordsReducer: { people, starships, planets },
+}) => {
+  return { people, starships, planets };
+};
+const mapDispatchToProps = { createOneRecord, updateOneRecord };
+export default connect(mapStateToProps, mapDispatchToProps)(FormPage);

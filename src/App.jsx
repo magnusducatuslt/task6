@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   PeoplePage,
   PlanetsPage,
@@ -8,120 +8,44 @@ import {
 import { NavBar } from "./components/common";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { returnMeUnForbiddenLinks } from "@utills";
-import { swapiApi, localStorageApi } from "@services";
+import { connect } from "react-redux";
+import { fetchRecords } from "@store";
 import "./App.scss";
 import { useEffect } from "react";
 
-function App() {
-  const pages = ["people", "starships", "planets"];
-  const [states, setState] = useState({
-    people: [],
-    planets: [],
-    starships: [],
-  });
+function App({ fetchRecords }) {
   useEffect(() => {
-    async function fillStorage() {
-      const { status, message } = localStorageApi({ arr: pages });
-      if (status) {
-        setState({ ...message });
-      } else {
-        for (const page of pages) {
-          message[page] = message[page] ? message[page] : await swapiApi(page);
-          localStorage.setItem(page, JSON.stringify(message[page]));
-        }
-        setState({ ...message });
-      }
-    }
-    fillStorage();
+    fetchRecords();
   }, []);
 
-  function update({ container, value }) {
-    return container.map((state) => {
-      if (state.name === value.name) {
-        return value;
-      }
-      return state;
-    });
-  }
   const routes = [
     {
       name: "people",
       path: "/people",
       text: "People's",
       exact: false,
-      component: (
-        <PeoplePage
-          initialState={states["people"]}
-          setNewState={(state) => {
-            setState({ ...states, people: [].concat(state) });
-          }}
-        />
-      ),
+      component: <PeoplePage />,
     },
     {
       name: "planets",
       path: "/planets",
       text: "Planet's",
       exact: false,
-      component: () => (
-        <PlanetsPage
-          initialState={states["planets"]}
-          setNewState={(state) => {
-            setState({ ...states, planets: [].concat(state) });
-          }}
-        />
-      ),
+      component: () => <PlanetsPage />,
     },
     {
       name: "starships",
       path: "/starship",
       text: "Starship's",
       exact: false,
-      component: () => (
-        <StarshipsPage
-          initialState={states["starships"]}
-          setNewState={(state) => {
-            setState({ ...states, starshipsships: [].concat(state) });
-          }}
-        />
-      ),
+      component: () => <StarshipsPage />,
     },
     {
       name: "form",
       path: "/form",
       text: "add/update record",
       exact: false,
-      component: () => (
-        <FormPage
-          setNewState={({ intention, targetState, values }) => {
-            if (intention === "update") {
-              const updatedContainer = update({
-                container: states[targetState],
-                value: values,
-              });
-              localStorage.setItem(
-                targetState,
-                JSON.stringify(updatedContainer)
-              );
-              setState({
-                ...states,
-                [targetState]: [].concat(updatedContainer),
-              });
-            } else {
-              localStorage.setItem(
-                targetState,
-                JSON.stringify(states[targetState].concat({ ...values }))
-              );
-              setState({
-                ...states,
-                [targetState]: states[targetState].concat({
-                  ...values,
-                }),
-              });
-            }
-          }}
-        />
-      ),
+      component: () => <FormPage />,
     },
     {
       name: "not-found",
@@ -156,5 +80,8 @@ function App() {
     </div>
   );
 }
-
-export default App;
+const mapStateToProps = ({ recordsReducer }) => {
+  return { recordsReducer };
+};
+const mapDispatchToProps = { fetchRecords };
+export default connect(mapStateToProps, mapDispatchToProps)(App);

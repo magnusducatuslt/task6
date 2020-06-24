@@ -1,13 +1,14 @@
 import React from "react";
 import { Table, ButtonDelete, ButtonCreate } from "../common";
 import { useHistory } from "react-router-dom";
-
+import { connect } from "react-redux";
+import { setRecord, deleteOneRecord } from "@store";
 import {
   returnMeNewArrayWithOutParams,
   returnMeCreatedObjectFromArrayWithoutParams,
 } from "@utills";
 
-export const StarshipsPage = ({ initialState, setNewState }) => {
+const StarshipsPage = ({ starship, deleteOneRecord }) => {
   const history = useHistory();
   const heads = [
     "Ships",
@@ -20,7 +21,7 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
     "starship_class",
     "action",
   ];
-  const ships = initialState.map((ship, index) => ({
+  const ships = starship.map((ship, index) => ({
     count: index + 1,
     name: ship.name,
     model: ship.model,
@@ -41,9 +42,10 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
     ),
   }));
   function deleteLine(index) {
-    initialState.splice(index, 1);
-    localStorage.setItem("starships", JSON.stringify([...initialState]));
-    setNewState([...initialState]);
+    deleteOneRecord({
+      target: "starships",
+      index,
+    });
   }
   function handleClickOnTable({ value }) {
     history.push({
@@ -101,3 +103,9 @@ export const StarshipsPage = ({ initialState, setNewState }) => {
     </div>
   );
 };
+
+const mapStateToProps = ({ recordsReducer: { starships } }) => {
+  return { starship: starships };
+};
+const mapDispatchToProps = { setRecord, deleteOneRecord };
+export default connect(mapStateToProps, mapDispatchToProps)(StarshipsPage);
